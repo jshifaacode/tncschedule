@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TNCschedule</title>
+    <link rel="icon" href="assets/logo/tnc-logo.png" />
+
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="js/components/loader-overlay.css" />
+
+    <script>
+      // Mencegah flash saat tema belum siap (dipakai oleh halaman lain juga)
+      try {
+        const theme =
+          localStorage.getItem("tnc_theme") ||
+          localStorage.getItem("theme") ||
+          "light";
+        document.documentElement.setAttribute("data-theme", theme);
+        document.documentElement.classList.add("theme-ready");
+      } catch (_) {}
+    </script>
+
+    <style>
+      /* Cover awal masuk website: full-bleed, modern, animatif */
+      .index-cover {
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        background:
+          radial-gradient(
+            1200px circle at 10% 10%,
+            rgba(29, 95, 191, 0.2),
+            transparent 55%
+          ),
+          radial-gradient(
+            900px circle at 80% 30%,
+            rgba(31, 122, 77, 0.18),
+            transparent 50%
+          ),
+          linear-gradient(180deg, var(--color-bg), var(--color-surface-alt));
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+      }
+
+      .index-cover::before {
+        content: "";
+        position: absolute;
+        inset: -40%;
+        background: conic-gradient(
+          from 180deg,
+          rgba(29, 95, 191, 0),
+          rgba(29, 95, 191, 0.35),
+          rgba(31, 122, 77, 0.35),
+          rgba(29, 95, 191, 0)
+        );
+        filter: blur(24px);
+        opacity: 0.85;
+        animation: cover-rotate 2.6s var(--ease-out) infinite;
+      }
+
+      .index-cover::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0),
+          rgba(255, 255, 255, 0.18),
+          rgba(255, 255, 255, 0)
+        );
+        transform: translateX(-120%);
+        animation: cover-shimmer 1.6s var(--ease-out) infinite;
+        mix-blend-mode: overlay;
+        pointer-events: none;
+      }
+
+      @keyframes cover-rotate {
+        0% {
+          transform: rotate(0deg) scale(1);
+        }
+        50% {
+          transform: rotate(180deg) scale(1.05);
+        }
+        100% {
+          transform: rotate(360deg) scale(1);
+        }
+      }
+
+      @keyframes cover-shimmer {
+        0% {
+          transform: translateX(-120%);
+          opacity: 0;
+        }
+        25% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateX(120%);
+          opacity: 0;
+        }
+      }
+
+      .index-logo {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 24px 20px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        backdrop-filter: blur(10px);
+        box-shadow: var(--shadow-soft);
+        animation: cover-pop 520ms var(--ease-out) both;
+      }
+
+      html[data-theme="dark"] .index-logo {
+        background: rgba(0, 0, 0, 0.22);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+      }
+
+      @keyframes cover-pop {
+        0% {
+          opacity: 0;
+          transform: translateY(10px) scale(0.98);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .index-mark {
+        width: 62px;
+        height: 62px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(
+          135deg,
+          rgba(29, 95, 191, 0.75),
+          rgba(31, 122, 77, 0.65)
+        );
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .index-mark::after {
+        content: "";
+        position: absolute;
+        inset: -40%;
+        background: radial-gradient(
+          circle at 30% 30%,
+          rgba(255, 255, 255, 0.65),
+          transparent 55%
+        );
+        animation: cover-glow 1.8s var(--ease-out) infinite;
+        opacity: 0.7;
+      }
+
+      @keyframes cover-glow {
+        0% {
+          transform: translate(-8px, 6px) scale(1);
+        }
+        50% {
+          transform: translate(10px, -4px) scale(1.06);
+        }
+        100% {
+          transform: translate(-8px, 6px) scale(1);
+        }
+      }
+
+      .index-mark svg {
+        position: relative;
+        z-index: 1;
+      }
+
+      .index-title {
+        font-family: var(--font-display);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        font-size: var(--fs-2xl);
+        margin: 0;
+        color: var(--color-ink);
+      }
+
+      .index-sub {
+        margin: 0;
+        margin-top: -4px;
+        font-size: var(--fs-sm);
+        color: rgba(0, 0, 0, 0.55);
+        text-align: center;
+      }
+
+      html[data-theme="dark"] .index-sub {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .index-loader-row {
+        margin-top: 6px;
+        width: 220px;
+        height: 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+        position: relative;
+      }
+
+      .index-loader-bar {
+        height: 100%;
+        width: 40%;
+        background: linear-gradient(
+          90deg,
+          rgba(29, 95, 191, 0.95),
+          rgba(31, 122, 77, 0.95)
+        );
+        border-radius: 999px;
+        animation: index-bar-move 1.15s var(--ease-out) infinite;
+      }
+
+      @keyframes index-bar-move {
+        0% {
+          transform: translateX(-60%);
+        }
+        100% {
+          transform: translateX(260%);
+        }
+      }
+
+      /* animasi keluar cover */
+      .index-cover--hide {
+        opacity: 0;
+        transform: translateY(-6px);
+        transition:
+          opacity 220ms var(--ease-out),
+          transform 220ms var(--ease-out);
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="index-cover" class="index-cover" aria-live="polite">
+      <div class="index-logo">
+        <div class="index-mark" aria-hidden="true">
+          <svg
+            width="26"
+            height="26"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M12 2L21 7V17L12 22L3 17V7L12 2Z"
+              stroke="rgba(255,255,255,0.95)"
+              stroke-width="1.8"
+            />
+            <path
+              d="M8.2 12.2L10.9 14.9L16 9.8"
+              stroke="rgba(255,255,255,0.95)"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+        <p class="index-title">TNCschedule</p>
+        <p class="index-sub">Loading TNC schedule…</p>
+
+        <div class="index-loader-row" aria-hidden="true">
+          <div class="index-loader-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { watchAuthState } from "./js/firebase/auth.js";
+
+      const cover = document.getElementById("index-cover");
+
+      function hideCover() {
+        if (!cover) return;
+        cover.classList.add("index-cover--hide");
+        setTimeout(() => cover?.remove(), 260);
+      }
+
+      watchAuthState((user) => {
+        hideCover();
+        window.location.replace(user ? "dashboard.html" : "login.html");
+      });
+    </script>
+  </body>
+</html>

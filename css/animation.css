@@ -1,0 +1,54 @@
+/* ==========================================================================
+   TNCschedule — Animations
+   Used sparingly and deliberately.
+   ========================================================================== */
+
+.fade-in {
+  animation: fade-in var(--duration-base) var(--ease-out);
+}
+
+.slide-up {
+  animation: slide-up var(--duration-base) var(--ease-out);
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.float-gentle {
+  animation: float-gentle 4s var(--ease-out) infinite;
+}
+
+@keyframes float-gentle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* Ripple effect (optional, for buttons/cards) */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(17,17,17,0.15);
+  transform: scale(0);
+  animation: ripple-anim 550ms var(--ease-out);
+  pointer-events: none;
+}
+
+[data-theme="dark"] .ripple-circle {
+  background: rgba(242,242,240,0.15);
+}
+
+@keyframes ripple-anim {
+  to { transform: scale(3); opacity: 0; }
+}
+
+/* Page transition wrapper */
+.page-enter {
+  animation: slide-up var(--duration-base) var(--ease-out);
+}

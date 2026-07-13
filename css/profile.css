@@ -1,0 +1,80 @@
+/* ==========================================================================
+   TNCschedule — Profile & Settings
+   ========================================================================== */
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+  flex-wrap: wrap;
+}
+
+.profile-avatar-wrap { position: relative; }
+
+.profile-avatar-edit {
+  position: absolute;
+  bottom: 0; right: 0;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  color: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--color-surface);
+}
+
+.profile-header-info h2 { font-size: var(--fs-xl); }
+.profile-header-info p { color: var(--color-ink-soft); font-size: var(--fs-sm); }
+
+.profile-stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.settings-section {
+  margin-bottom: var(--space-6);
+}
+
+.settings-section h3 {
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: var(--border-width) solid var(--color-border-soft);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border-soft);
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.settings-row:last-child { border-bottom: none; }
+.settings-row-label { font-weight: 600; font-size: var(--fs-sm); }
+.settings-row-desc { font-size: var(--fs-xs); color: var(--color-ink-faint); }
+
+.theme-switch {
+  display: flex;
+  gap: var(--space-1);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-pill);
+  padding: 3px;
+}
+
+.theme-switch button {
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  border-radius: var(--radius-pill);
+}
+
+.theme-switch button[aria-pressed="true"] {
+  background: var(--color-ink);
+  color: var(--color-bg);
+}

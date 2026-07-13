@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daftar — TNCschedule</title>
+  <link rel="icon" href="assets/logo/tnc-logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/animation.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>
+    try {
+      var t = JSON.parse(localStorage.getItem('tncschedule:theme') || '"light"');
+      document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+    document.documentElement.classList.add('theme-ready');
+  </script>
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-visual" aria-hidden="true">
+      <div class="auth-visual-grid"></div>
+      <div class="auth-visual-brand">
+        <img src="assets/logo/tnc-logo.png" alt="" onerror="this.style.display='none'">
+        <span>TNCschedule</span>
+      </div>
+      <div class="auth-visual-quote">
+        <h2>Bergabunglah dengan tim.</h2>
+        <p>Daftarkan akun Anda untuk mulai berkoordinasi dengan seluruh staff TNC dalam satu platform.</p>
+      </div>
+      <div></div>
+    </section>
+
+    <section class="auth-form-side">
+      <div class="auth-form-box slide-up">
+        <h1>Buat Akun</h1>
+        <p class="auth-subtitle">Daftar sebagai staff internal TNC.</p>
+
+        <div id="auth-error" class="auth-error-banner hidden" role="alert"></div>
+
+        <form class="auth-form" id="register-form" novalidate>
+          <div class="field">
+            <label class="field-label" for="fullName">Nama Lengkap <span class="required">*</span></label>
+            <input class="input" type="text" id="fullName" required>
+            <span class="field-error hidden" id="fullName-error"></span>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="jobdesk">Jobdesk</label>
+            <input class="input" type="text" id="jobdesk" placeholder="Contoh: Program Officer">
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="email">Email <span class="required">*</span></label>
+            <input class="input" type="email" id="email" autocomplete="username" required>
+            <span class="field-error hidden" id="email-error"></span>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="password">Kata Sandi <span class="required">*</span></label>
+            <input class="input" type="password" id="password" autocomplete="new-password" required>
+            <span class="field-hint">Minimal 6 karakter.</span>
+            <span class="field-error hidden" id="password-error"></span>
+          </div>
+
+          <div class="field">
+            <label class="field-label" for="confirmPassword">Konfirmasi Kata Sandi <span class="required">*</span></label>
+            <input class="input" type="password" id="confirmPassword" autocomplete="new-password" required>
+            <span class="field-error hidden" id="confirmPassword-error"></span>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full" id="register-submit">Daftar</button>
+        </form>
+
+        <p class="auth-footer-link">Sudah punya akun? <a href="login.html">Masuk di sini</a></p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { registerWithEmail, mapAuthError, redirectIfAuthenticated } from "./js/firebase/auth.js";
+    import { required, isValidEmail, minLength, passwordsMatch, runValidators, showFieldError, clearFieldError } from "./js/utils/validator.js";
+    import { qs } from "./js/utils/helper.js";
+
+    redirectIfAuthenticated();
+
+    const form = qs("#register-form");
+    const errorBanner = qs("#auth-error");
+    const submitBtn = qs("#register-submit");
+
+    function showBannerError(message) {
+      errorBanner.textContent = message;
+      errorBanner.classList.remove("hidden");
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorBanner.classList.add("hidden");
+
+      const fields = {
+        fullName: qs("#fullName"),
+        email: qs("#email"),
+        password: qs("#password"),
+        confirmPassword: qs("#confirmPassword"),
+      };
+      Object.keys(fields).forEach((k) => clearFieldError(fields[k], qs(`#${k}-error`)));
+
+      const nameCheck = required(fields.fullName.value, "Nama lengkap");
+      if (!nameCheck.valid) return showFieldError(fields.fullName, qs("#fullName-error"), nameCheck.message);
+
+      const emailCheck = runValidators([() => required(fields.email.value, "Email"), () => isValidEmail(fields.email.value)]);
+      if (!emailCheck.valid) return showFieldError(fields.email, qs("#email-error"), emailCheck.message);
+
+      const passwordCheck = minLength(fields.password.value, 6, "Kata sandi");
+      if (!passwordCheck.valid) return showFieldError(fields.password, qs("#password-error"), passwordCheck.message);
+
+      const matchCheck = passwordsMatch(fields.password.value, fields.confirmPassword.value);
+      if (!matchCheck.valid) return showFieldError(fields.confirmPassword, qs("#confirmPassword-error"), matchCheck.message);
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Memproses...";
+      try {
+        await registerWithEmail({
+          fullName: fields.fullName.value.trim(),
+          email: fields.email.value.trim(),
+          password: fields.password.value,
+          jobdesk: qs("#jobdesk").value.trim(),
+        });
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        showBannerError(mapAuthError(err.code));
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Daftar";
+      }
+    });
+  </script>
+</body>
+</html>

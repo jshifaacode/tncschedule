@@ -1,0 +1,271 @@
+/* ==========================================================================
+   TNCschedule — App Shell Layout
+   Desktop: Sidebar. Mobile: Bottom Navigation. Never both.
+   ========================================================================== */
+
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  min-height: 100vh;
+  transition: grid-template-columns var(--duration-base) var(--ease-out);
+}
+
+.app-shell[data-sidebar="collapsed"] {
+  grid-template-columns: var(--sidebar-width-collapsed) 1fr;
+}
+
+/* ---- Sidebar (desktop) ---- */
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  border-right: var(--border-width) solid var(--color-border);
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-5) var(--space-4);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding-bottom: var(--space-5);
+  margin-bottom: var(--space-4);
+  border-bottom: var(--border-width) solid var(--color-border-soft);
+}
+
+.sidebar-brand img {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.sidebar-brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-md);
+  white-space: nowrap;
+}
+
+.app-shell[data-sidebar="collapsed"] .sidebar-brand-name,
+.app-shell[data-sidebar="collapsed"] .sidebar-nav-label,
+.app-shell[data-sidebar="collapsed"] .sidebar-section-title {
+  display: none;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+}
+
+.sidebar-section-title {
+  font-size: var(--fs-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-faint);
+  padding: var(--space-4) var(--space-3) var(--space-2);
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  color: var(--color-ink-soft);
+  transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out);
+  white-space: nowrap;
+}
+
+.sidebar-nav-item:hover {
+  background: var(--color-surface-alt);
+  color: var(--color-ink);
+}
+
+.sidebar-nav-item[aria-current="page"] {
+  background: var(--color-ink);
+  color: var(--color-bg);
+}
+
+.sidebar-nav-item svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-md);
+  margin-top: var(--space-4);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-flat-sm);
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.sidebar-toggle:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 0 var(--color-ink);
+}
+
+.sidebar-toggle:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 0 var(--color-ink);
+}
+
+/* ---- Header (top bar within main content) ---- */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: var(--space-6);
+  background: color-mix(in srgb, var(--color-bg) 88%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: var(--border-width) solid var(--color-border);
+}
+
+.app-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  padding: var(--space-6);
+  max-width: 100%;
+}
+
+/* ---- Bottom Navigation (mobile only) ---- */
+.bottom-nav {
+  display: none;
+}
+
+/* ---- Responsive breakpoints ---- */
+@media (max-width: 1024px) {
+  .app-shell {
+    grid-template-columns: 1fr;
+  }
+  .sidebar {
+    display: none;
+  }
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--bottomnav-height);
+    background: var(--color-surface);
+    border-top: var(--border-width) solid var(--color-border);
+    z-index: var(--z-bottomnav);
+    justify-content: space-around;
+    align-items: center;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .app-content {
+    padding: var(--space-4);
+    padding-bottom: calc(var(--bottomnav-height) + var(--space-6));
+  }
+  .app-header {
+    padding-inline: var(--space-4);
+  }
+
+  /* Sidebar becomes a drawer on tablet, triggered via .drawer-open */
+  .sidebar.drawer {
+    display: flex;
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: min(280px, 80vw);
+    z-index: var(--z-sidebar);
+    box-shadow: var(--shadow-flat-lg);
+    transform: translateX(-100%);
+    transition: transform var(--duration-base) var(--ease-out);
+  }
+  .sidebar.drawer.open {
+    transform: translateX(0);
+  }
+}
+
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--fs-xs);
+  color: var(--color-ink-faint);
+  padding: var(--space-2);
+  flex: 1;
+  position: relative;
+}
+
+.bottom-nav-item svg {
+  width: 22px;
+  height: 22px;
+}
+
+.bottom-nav-item[aria-current="page"] {
+  color: var(--color-ink);
+}
+
+.bottom-nav-item.fab {
+  color: var(--color-bg);
+}
+
+.bottom-nav-fab-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--color-ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: -22px;
+  border: var(--border-width) solid var(--color-border);
+  box-shadow: var(--shadow-flat-sm);
+}
+
+/* ---- Drawer backdrop ---- */
+.drawer-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(17,17,17,0.4);
+  z-index: calc(var(--z-sidebar) - 1);
+}
+.drawer-backdrop.open {
+  display: block;
+}
+
+/* ---- Page grid helpers ---- */
+.page-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-5);
+}
+
+.col-span-4 { grid-column: span 4; }
+.col-span-6 { grid-column: span 6; }
+.col-span-8 { grid-column: span 8; }
+.col-span-12 { grid-column: span 12; }
+
+@media (max-width: 900px) {
+  .col-span-4, .col-span-6, .col-span-8 {
+    grid-column: span 12;
+  }
+}

@@ -1,0 +1,7 @@
+- [x] Investigasi penyebab tombol hapus kegiatan di kalender tidak bekerja (cek binding event + delete flow)
+- [x] Periksa apakah query/detail activity yang dibuka memuat field `id` sesuai Firestore (dipakai langsung ke deleteActivity)
+- [x] Validasi confirmDelete ikut cabang kode delete (pastikan urutan async)
+- [x] Tambah safeguard UI: setelah delete sukses, close modal dulu lalu tunggu sedikit untuk realtime listener update
+- [x] Hapus refresh render paksa yang berpotensi bentrok dengan callback realtime
+- [x] Tambahkan loader overlay saat kalender memuat (agar UX tidak terasa “ngehantung”)
+- [ ] Testing manual: tambah kegiatan -> hapus dari modal detail -> pastikan menghilang di semua view (month/list/card/table)

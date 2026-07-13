@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masuk — TNCschedule</title>
+  <link rel="icon" href="assets/logo/tnc-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/animation.css">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script>
+    // Terapkan tema tersimpan sebelum render untuk menghindari flash.
+    try {
+      var t = JSON.parse(localStorage.getItem('tncschedule:theme') || '"light"');
+      document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+    document.documentElement.classList.add('theme-ready');
+  </script>
+</head>
+<body>
+  <main class="auth-page">
+    <section class="auth-visual" aria-hidden="true">
+      <div class="auth-visual-grid"></div>
+      <div class="auth-visual-brand">
+        <img src="assets/logo/tnc-logo.png" alt="" onerror="this.style.display='none'">
+        <span>TNCschedule</span>
+      </div>
+      <div class="auth-visual-quote">
+        <h2>Satu kalender. Seluruh staff. Selalu sinkron.</h2>
+        <p>Pusat koordinasi kegiatan dan kehadiran internal The Nature Conservancy Indonesia — realtime, di mana pun Anda berada.</p>
+      </div>
+      <div></div>
+    </section>
+
+    <section class="auth-form-side">
+      <div class="auth-form-box slide-up">
+        <h1>Selamat Datang</h1>
+        <p class="auth-subtitle">Masuk ke akun TNCschedule Anda.</p>
+
+        <div id="auth-error" class="auth-error-banner hidden" role="alert"></div>
+
+        <form class="auth-form" id="login-form" novalidate>
+          <div class="field">
+            <label class="field-label" for="email">Email <span class="required">*</span></label>
+            <input class="input" type="email" id="email" name="email" autocomplete="username" required>
+            <span class="field-error hidden" id="email-error"></span>
+          </div>
+
+          <div class="field">
+            <div class="flex items-center justify-between">
+              <label class="field-label" for="password">Kata Sandi <span class="required">*</span></label>
+              <a href="forgot-password.html" class="text-xs text-muted">Lupa kata sandi?</a>
+            </div>
+            <input class="input" type="password" id="password" name="password" autocomplete="current-password" required>
+            <span class="field-error hidden" id="password-error"></span>
+          </div>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="remember-me" checked>
+            Ingat saya di perangkat ini
+          </label>
+
+          <button type="submit" class="btn btn-primary btn-full" id="login-submit">Masuk</button>
+        </form>
+
+        <div class="auth-divider">ATAU</div>
+
+        <button type="button" class="btn btn-google btn-full" id="google-login">
+          <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.6 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.5 16.1 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.6 5.1 29.6 3 24 3c-7.6 0-14.1 4.3-17.7 10.7z"/><path fill="#4CAF50" d="M24 45c5.5 0 10.4-1.9 14.3-5.1l-6.6-5.4C29.6 36.5 26.9 37.5 24 37.5c-5.3 0-9.7-3.4-11.3-8.1l-6.6 5C9.8 40.6 16.3 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.5l6.6 5.4C41.5 35.9 45 30.4 45 24c0-1.2-.1-2.4-.4-3.5z"/></svg>
+          Masuk dengan Google
+        </button>
+
+        <p class="auth-footer-link">Belum punya akun? <a href="register.html">Daftar sekarang</a></p>
+      </div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { loginWithEmail, loginWithGoogle, mapAuthError, redirectIfAuthenticated } from "./js/firebase/auth.js";
+    import { required, isValidEmail, runValidators, showFieldError, clearFieldError } from "./js/utils/validator.js";
+    import { qs } from "./js/utils/helper.js";
+
+    redirectIfAuthenticated();
+
+    const form = qs("#login-form");
+    const errorBanner = qs("#auth-error");
+    const submitBtn = qs("#login-submit");
+
+    function showBannerError(message) {
+      errorBanner.textContent = message;
+      errorBanner.classList.remove("hidden");
+    }
+    function hideBannerError() {
+      errorBanner.classList.add("hidden");
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      hideBannerError();
+
+      const emailEl = qs("#email");
+      const passwordEl = qs("#password");
+      const emailError = qs("#email-error");
+      const passwordError = qs("#password-error");
+      clearFieldError(emailEl, emailError);
+      clearFieldError(passwordEl, passwordError);
+
+      const emailCheck = runValidators([() => required(emailEl.value, "Email"), () => isValidEmail(emailEl.value)]);
+      if (!emailCheck.valid) return showFieldError(emailEl, emailError, emailCheck.message);
+
+      const passwordCheck = required(passwordEl.value, "Kata sandi");
+      if (!passwordCheck.valid) return showFieldError(passwordEl, passwordError, passwordCheck.message);
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Memproses...";
+      try {
+        await loginWithEmail(emailEl.value.trim(), passwordEl.value, qs("#remember-me").checked);
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        showBannerError(mapAuthError(err.code));
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Masuk";
+      }
+    });
+
+    qs("#google-login").addEventListener("click", async () => {
+      hideBannerError();
+      try {
+        await loginWithGoogle(qs("#remember-me").checked);
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        showBannerError(mapAuthError(err.code));
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kalender — TNCschedule</title>
+    <link rel="icon" href="assets/logo/tnc-logo.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/calendar.css" />
+    <link rel="stylesheet" href="css/animation.css" />
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <script>
+      try {
+        var t = JSON.parse(
+          localStorage.getItem("tncschedule:theme") || '"light"',
+        );
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+      document.documentElement.classList.add("theme-ready");
+    </script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Lewati ke konten utama</a>
+
+    <div class="app-shell" id="app-shell">
+      <div id="sidebar-root"></div>
+
+      <div class="app-main">
+        <header class="app-header">
+          <h2 style="font-size: var(--fs-md)">Kalender Bersama</h2>
+          <div class="flex items-center gap-3">
+            <button
+              type="button"
+              class="btn btn-icon btn-ghost"
+              data-theme-toggle
+              aria-label="Ganti tema"
+            >
+              🌓
+            </button>
+            <a
+              href="notifications.html"
+              class="btn btn-icon btn-ghost"
+              aria-label="Notifikasi"
+              >🔔</a
+            >
+            <span data-user-avatar></span>
+            <button type="button" class="btn btn-sm" data-logout-btn>
+              Keluar
+            </button>
+          </div>
+        </header>
+
+        <main class="app-content page-enter" id="main-content">
+          <div class="cal-toolbar">
+            <div class="cal-toolbar-left">
+              <div class="cal-nav-group">
+                <button
+                  type="button"
+                  data-nav-prev
+                  aria-label="Bulan sebelumnya"
+                >
+                  ←
+                </button>
+                <button type="button" data-nav-today>Hari Ini</button>
+                <button
+                  type="button"
+                  data-nav-next
+                  aria-label="Bulan berikutnya"
+                >
+                  →
+                </button>
+              </div>
+              <div class="cal-toolbar-title" data-cal-title>Memuat...</div>
+            </div>
+            <div class="flex items-center gap-3">
+              <input
+                class="input"
+                type="search"
+                placeholder="Cari kegiatan..."
+                data-cal-search
+                style="width: 220px"
+              />
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-add-activity-btn
+              >
+                + Tambah Kegiatan
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="cal-view-switch"
+            style="margin-bottom: 16px; width: fit-content"
+          >
+            <button type="button" data-view-btn="month" aria-pressed="true">
+              Bulan
+            </button>
+            <button type="button" data-view-btn="list" aria-pressed="false">
+              List
+            </button>
+            <button type="button" data-view-btn="card" aria-pressed="false">
+              Card
+            </button>
+            <button type="button" data-view-btn="table" aria-pressed="false">
+              Tabel
+            </button>
+          </div>
+
+          <div class="cal-filter-bar">
+            <button
+              type="button"
+              class="cal-filter-chip"
+              data-filter-chip
+              data-filter-key="status"
+              data-filter-value="belum_dimulai"
+              aria-pressed="false"
+            >
+              Belum Dimulai
+            </button>
+            <button
+              type="button"
+              class="cal-filter-chip"
+              data-filter-chip
+              data-filter-key="status"
+              data-filter-value="sedang_berjalan"
+              aria-pressed="false"
+            >
+              Sedang Berjalan
+            </button>
+            <button
+              type="button"
+              class="cal-filter-chip"
+              data-filter-chip
+              data-filter-key="status"
+              data-filter-value="selesai"
+              aria-pressed="false"
+            >
+              Selesai
+            </button>
+            <button
+              type="button"
+              class="cal-filter-chip"
+              data-filter-chip
+              data-filter-key="priority"
+              data-filter-value="sangat_penting"
+              aria-pressed="false"
+            >
+              Sangat Penting
+            </button>
+            <button
+              type="button"
+              class="cal-filter-chip"
+              data-filter-chip
+              data-filter-key="priority"
+              data-filter-value="tinggi"
+              aria-pressed="false"
+            >
+              Prioritas Tinggi
+            </button>
+          </div>
+
+          <div data-view-panel="month">
+            <div data-month-grid></div>
+          </div>
+          <div data-view-panel="list" class="hidden">
+            <div data-list-view></div>
+          </div>
+          <div data-view-panel="card" class="hidden">
+            <div data-card-view></div>
+          </div>
+          <div data-view-panel="table" class="hidden">
+            <div data-table-view></div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="bottomnav-root"></div>
+
+    <link rel="stylesheet" href="css/calendar-loader.css" />
+
+    <script type="module" src="js/modules/calendar-page.js"></script>
+  </body>
+</html>

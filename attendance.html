@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Absensi — TNCschedule</title>
+    <link rel="icon" href="assets/logo/tnc-logo.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/variables.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/components.css" />
+    <link rel="stylesheet" href="css/attendance.css" />
+    <link rel="stylesheet" href="css/animation.css" />
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/responsive.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.3/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+      try {
+        var t = JSON.parse(
+          localStorage.getItem("tncschedule:theme") || '"light"',
+        );
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {}
+      document.documentElement.classList.add("theme-ready");
+    </script>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Lewati ke konten utama</a>
+
+    <div class="app-shell" id="app-shell">
+      <div id="sidebar-root"></div>
+
+      <div class="app-main">
+        <header class="app-header">
+          <h2 style="font-size: var(--fs-md)">Absensi</h2>
+          <div class="flex items-center gap-3">
+            <button
+              type="button"
+              class="btn btn-icon btn-ghost"
+              data-theme-toggle
+              aria-label="Ganti tema"
+            >
+              🌓
+            </button>
+            <a
+              href="notifications.html"
+              class="btn btn-icon btn-ghost"
+              aria-label="Notifikasi"
+              >🔔</a
+            >
+            <span data-user-avatar></span>
+            <button type="button" class="btn btn-sm" data-logout-btn>
+              Keluar
+            </button>
+          </div>
+        </header>
+
+        <main class="app-content page-enter" id="main-content">
+          <div class="page-grid" style="margin-bottom: 24px">
+            <div class="col-span-4">
+              <div class="card att-clock-card">
+                <div class="att-clock-time" data-att-clock>00:00:00</div>
+                <div class="att-clock-date" data-att-date>
+                  Memuat tanggal...
+                </div>
+                <div class="att-clock-actions">
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-checkin-btn
+                  >
+                    ✅ Absen Masuk
+                  </button>
+                  <button type="button" class="btn" data-checkout-btn>
+                    🚪 Absen Keluar
+                  </button>
+                </div>
+                <p class="text-xs text-faint" style="margin-top: 16px">
+                  Atau pilih status lain:
+                </p>
+                <div class="att-status-picker">
+                  <button
+                    type="button"
+                    class="att-status-option"
+                    data-status-option="hadir"
+                    aria-pressed="false"
+                  >
+                    Hadir
+                  </button>
+                  <button
+                    type="button"
+                    class="att-status-option"
+                    data-status-option="izin"
+                    aria-pressed="false"
+                  >
+                    Izin
+                  </button>
+                  <button
+                    type="button"
+                    class="att-status-option"
+                    data-status-option="sakit"
+                    aria-pressed="false"
+                  >
+                    Sakit
+                  </button>
+                  <button
+                    type="button"
+                    class="att-status-option"
+                    data-status-option="dinas_luar"
+                    aria-pressed="false"
+                  >
+                    Dinas Luar
+                  </button>
+                  <button
+                    type="button"
+                    class="att-status-option"
+                    data-status-option="wfh"
+                    aria-pressed="false"
+                  >
+                    WFH
+                  </button>
+                  <button
+                    type="button"
+                    class="att-status-option"
+                    data-status-option="cuti"
+                    aria-pressed="false"
+                  >
+                    Cuti
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-span-8">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Kehadiran Hari Ini</h3>
+                </div>
+                <div
+                  class="stat-grid"
+                  data-att-today-stats
+                  style="margin-bottom: 16px"
+                ></div>
+                <div class="att-today-list" data-att-today-list></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" id="rekap">
+            <div class="card-header">
+              <h3 class="card-title">Rekap Absensi</h3>
+              <div class="flex gap-2">
+                <button type="button" class="btn btn-sm" data-export-csv>
+                  Export CSV
+                </button>
+                <button type="button" class="btn btn-sm" data-export-excel>
+                  Export Excel
+                </button>
+              </div>
+            </div>
+
+            <div class="att-recap-filters">
+              <div class="field">
+                <label class="field-label">Dari Tanggal</label>
+                <input class="input" type="date" data-recap-start />
+              </div>
+              <div class="field">
+                <label class="field-label">Sampai Tanggal</label>
+                <input class="input" type="date" data-recap-end />
+              </div>
+              <button
+                type="button"
+                class="btn btn-primary"
+                data-recap-filter-btn
+              >
+                Terapkan Filter
+              </button>
+            </div>
+
+            <div class="page-grid">
+              <div class="col-span-4">
+                <div
+                  class="att-stat-donut-wrap"
+                  style="flex-direction: column; align-items: stretch"
+                >
+                  <canvas id="recap-donut-chart" height="200"></canvas>
+                  <div
+                    class="att-legend"
+                    data-recap-legend
+                    style="margin-top: 12px"
+                  ></div>
+                </div>
+              </div>
+              <div class="col-span-8">
+                <div data-recap-table></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div id="bottomnav-root"></div>
+
+    <script type="module" src="js/modules/attendance-page.js"></script>
+  </body>
+</html>
