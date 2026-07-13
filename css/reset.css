@@ -71,16 +71,18 @@ fieldset {
 }
 
 ::selection {
-  background: var(--color-ink);
-  color: var(--color-bg);
+  background: var(--color-accent-blue);
+  color: var(--color-surface);
 }
+
 
 /* Visible keyboard focus everywhere (accessibility requirement) */
 :focus-visible {
-  outline: 2px solid var(--color-ink);
+  outline: 2px solid var(--color-accent-blue);
   outline-offset: 2px;
 }
 
 [data-theme="dark"] :focus-visible {
-  outline-color: var(--color-ink);
+  outline-color: var(--color-accent-blue);
 }
+

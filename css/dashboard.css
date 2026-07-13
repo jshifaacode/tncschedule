@@ -157,8 +157,8 @@
 }
 
 .mini-cal-cell.today {
-  background: var(--color-ink);
-  color: var(--color-bg);
+  background: var(--color-accent-blue);
+  color: var(--color-surface);
   font-weight: 700;
 }
 

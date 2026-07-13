@@ -26,7 +26,8 @@
   height: 42px;
   border-radius: 50%;
   border: 3px solid rgba(0, 0, 0, 0.08);
-  border-top-color: var(--color-primary, #2563eb);
+  border-top-color: var(--color-accent-blue, #263c92);
+
   animation: page-loader-spin 900ms linear infinite;
 }
 

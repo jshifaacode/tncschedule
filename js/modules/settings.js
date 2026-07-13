@@ -1,10 +1,4 @@
-/**
- * settings.js
- * ----------------------------------------------------------------------
- * Logika halaman Pengaturan: ubah password, ubah email, preferensi
- * notifikasi (disimpan di koleksi `settings`, satu dokumen per user).
- * ----------------------------------------------------------------------
- */
+
 
 import { auth } from "../firebase/firebase-config.js";
 import {

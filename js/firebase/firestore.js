@@ -1,14 +1,3 @@
-/**
- * firestore.js
- * ----------------------------------------------------------------------
- * Lapisan akses data (data access layer) untuk Cloud Firestore.
- * Modul lain (modules/calendar.js, modules/activities.js, dll.) TIDAK
- * boleh memanggil Firestore SDK langsung — semua akses data melewati
- * fungsi-fungsi di sini agar query, penamaan koleksi, dan strategi
- * caching konsisten di seluruh aplikasi (Separation of Concerns).
- * ----------------------------------------------------------------------
- */
-
 import { db } from "./firebase-config.js";
 import {
   collection,
@@ -27,7 +16,6 @@ import {
   Timestamp,
 } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
 
-/** Nama koleksi terpusat agar tidak ada "magic string" tersebar di codebase. */
 export const COLLECTIONS = {
   USERS: "users",
   ACTIVITIES: "activities",
@@ -38,7 +26,6 @@ export const COLLECTIONS = {
   SETTINGS: "settings",
 };
 
-/** Subcollections di bawah activities/{id} */
 export const SUBCOLLECTIONS = {
   COMMENTS: "comments",
   EVALUATIONS: "evaluations",
@@ -47,12 +34,8 @@ export const SUBCOLLECTIONS = {
 
 export { serverTimestamp, Timestamp };
 
-/**
- * Membuat dokumen baru pada koleksi tertentu.
- * @param {string} collectionPath
- * @param {object} data
- * @returns {Promise<string>} ID dokumen baru
- */
+
+
 export async function createDoc(collectionPath, data) {
   const ref = await addDoc(collection(db, collectionPath), {
     ...data,
@@ -62,12 +45,6 @@ export async function createDoc(collectionPath, data) {
   return ref.id;
 }
 
-/**
- * Memperbarui dokumen. Otomatis menambahkan updatedAt.
- * @param {string} collectionPath
- * @param {string} id
- * @param {object} data
- */
 export function updateDocById(collectionPath, id, data) {
   return updateDoc(doc(db, collectionPath, id), {
     ...data,
@@ -75,7 +52,6 @@ export function updateDocById(collectionPath, id, data) {
   });
 }
 
-/** Menghapus dokumen berdasarkan ID. */
 export function deleteDocById(collectionPath, id) {
   return deleteDoc(doc(db, collectionPath, id));
 }
@@ -129,23 +105,14 @@ export function listenCollection(collectionPath, options, callback) {
   );
 }
 
-/**
- * Mendengarkan satu dokumen secara realtime (dipakai di halaman detail kegiatan).
- * @param {string} collectionPath
- * @param {string} id
- * @param {(data: object|null) => void} callback
- * @returns {() => void} unsubscribe
- */
+
 export function listenDoc(collectionPath, id, callback) {
   return onSnapshot(doc(db, collectionPath, id), (snap) => {
     callback(snap.exists() ? { id: snap.id, ...snap.data() } : null);
   });
 }
 
-/**
- * Query sekali jalan (non-realtime), berguna untuk export laporan
- * atau pencarian yang tidak perlu live update.
- */
+
 export async function getCollectionOnce(collectionPath, options) {
   let q = collection(db, collectionPath);
   const constraints = [];
@@ -167,16 +134,12 @@ export async function getCollectionOnce(collectionPath, options) {
   return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
 }
 
-/** Helper path untuk subcollection, misal: activities/{id}/comments */
+
 export function subcollectionPath(parentCollection, parentId, sub) {
   return `${parentCollection}/${parentId}/${sub}`;
 }
 
-/**
- * Mencatat entri Activity Log. Dipanggil setiap kali ada create/update/delete
- * pada data penting, memenuhi requirement Audit Trail.
- * @param {{userId:string,userName:string,action:string,targetType:string,targetId:string,targetName?:string,before?:object,after?:object}} entry
- */
+
 export function writeActivityLog(entry) {
   return createDoc(COLLECTIONS.ACTIVITY_LOGS, entry);
 }

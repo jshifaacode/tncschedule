@@ -1,9 +1,4 @@
-/**
- * evaluations.js
- * ----------------------------------------------------------------------
- * Evaluasi Harian pada subcollection activities/{id}/evaluations.
- * ----------------------------------------------------------------------
- */
+
 
 import {
   COLLECTIONS,
@@ -18,12 +13,7 @@ import {
 } from "../firebase/firestore.js";
 import { pushNotification } from "./notifications.js";
 
-/**
- * Menambahkan evaluasi harian pada sebuah kegiatan.
- * @param {string} activityId
- * @param {{uid:string,fullName:string,photoURL?:string}} author
- * @param {{title:string, content:string}} data
- */
+
 export async function addEvaluation(activityId, author, data) {
   const path = subcollectionPath(
     COLLECTIONS.ACTIVITIES,
@@ -85,7 +75,7 @@ export function deleteEvaluation(activityId, evalId) {
   return deleteDocById(path, evalId);
 }
 
-/** Realtime listener evaluasi, terbaru di atas (kronologis terbalik). */
+
 export function listenEvaluations(activityId, callback) {
   const path = subcollectionPath(
     COLLECTIONS.ACTIVITIES,

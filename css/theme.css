@@ -8,11 +8,14 @@ body,
 .card,
 .bottom-nav,
 .modal,
-.input, .select, .textarea {
-  transition: background-color var(--duration-base) var(--ease-out),
-              border-color var(--duration-base) var(--ease-out),
-              color var(--duration-base) var(--ease-out),
-              box-shadow var(--duration-base) var(--ease-out);
+.input,
+.select,
+.textarea {
+  transition:
+    background-color var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    color var(--duration-base) var(--ease-out),
+    box-shadow var(--duration-base) var(--ease-out);
 }
 
 /* Prevent flash: applied to <html> before first paint via inline script in each page */

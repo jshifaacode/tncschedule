@@ -6,49 +6,60 @@
 
 :root {
   /* ---- Core palette (light mode) ---- */
-  --color-bg: #FAFAF9;
-  --color-surface: #FFFFFF;
-  --color-surface-alt: #F2F1EE;
+  --color-bg: #fefefe;
+  --color-surface: #fefefe;
+  --color-surface-alt: #fefefe;
+
   --color-ink: #111111;
-  --color-ink-soft: #4B4B4B;
-  --color-ink-faint: #8A8A85;
+
+  --color-ink-soft: #4b4b4b;
+  --color-ink-faint: #8a8a85;
+
   --color-border: #111111;
-  --color-border-soft: #DEDDD8;
+
+  --color-border-soft: #deddd8;
 
   /* ---- Accent (used sparingly: badges, status, charts) ---- */
-  --color-accent-green: #1F7A4D;
-  --color-accent-green-bg: #E4F3EA;
-  --color-accent-blue: #1D5FBF;
-  --color-accent-blue-bg: #E5EEFB;
-  --color-accent-amber: #B4790B;
-  --color-accent-amber-bg: #FBF0DC;
-  --color-accent-red: #C0392B;
-  --color-accent-red-bg: #FBE7E4;
-  --color-accent-purple: #6B4FA0;
-  --color-accent-purple-bg: #EEE8F7;
-  --color-accent-gray: #5B5B58;
-  --color-accent-gray-bg: #ECECE9;
+  --color-accent-green: #263c92;
+  --color-accent-green-bg: #e5eefb;
+
+  --color-accent-blue: #263c92;
+  --color-accent-blue-bg: #e5eefb;
+
+  --color-accent-amber: #263c92;
+  --color-accent-amber-bg: #e5eefb;
+  --color-accent-red: #263c92;
+  --color-accent-red-bg: #e5eefb;
+  --color-accent-purple: #263c92;
+  --color-accent-purple-bg: #e5eefb;
+  --color-accent-gray: #263c92;
+  --color-accent-gray-bg: #e5eefb;
 
   /* ---- Status colors (attendance / activity) ---- */
   --status-hadir: var(--color-accent-green);
   --status-hadir-bg: var(--color-accent-green-bg);
   --status-izin: var(--color-accent-blue);
+
   --status-izin-bg: var(--color-accent-blue-bg);
   --status-sakit: var(--color-accent-amber);
   --status-sakit-bg: var(--color-accent-amber-bg);
+
   --status-dinas: var(--color-accent-purple);
   --status-dinas-bg: var(--color-accent-purple-bg);
-  --status-wfh: #2E8E9E;
-  --status-wfh-bg: #E1F2F4;
+
+  --status-wfh: #2e8e9e;
+  --status-wfh-bg: #e1f2f4;
+
   --status-cuti: var(--color-accent-gray);
   --status-cuti-bg: var(--color-accent-gray-bg);
+
   --status-alpha: var(--color-accent-red);
   --status-alpha-bg: var(--color-accent-red-bg);
 
   /* ---- Typography ---- */
-  --font-display: 'Space Grotesk', 'Segoe UI', sans-serif;
-  --font-body: 'Inter', 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "Inter", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Consolas", monospace;
 
   --fs-xs: 0.75rem;
   --fs-sm: 0.8125rem;
@@ -88,10 +99,12 @@
   --shadow-flat: 4px 4px 0 0 var(--color-ink);
   --shadow-flat-sm: 2px 2px 0 0 var(--color-ink);
   --shadow-flat-lg: 6px 6px 0 0 var(--color-ink);
-  --shadow-soft: 0 1px 2px rgba(17,17,17,0.06), 0 4px 12px rgba(17,17,17,0.04);
-  --shadow-focus: 0 0 0 3px rgba(29,95,191,0.35);
+  --shadow-soft:
+    0 1px 2px rgba(17, 17, 17, 0.06), 0 4px 12px rgba(17, 17, 17, 0.04);
+  --shadow-focus: 0 0 0 3px rgba(38, 60, 146, 0.35);
 
   /* ---- Motion ---- */
+
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-fast: 120ms;
   --duration-base: 200ms;
@@ -117,32 +130,38 @@
 [data-theme="dark"] {
   --color-bg: #101010;
   --color-surface: #171717;
-  --color-surface-alt: #1E1E1D;
-  --color-ink: #F2F2F0;
-  --color-ink-soft: #C7C7C3;
-  --color-ink-faint: #8A8A85;
-  --color-border: #F2F2F0;
+  --color-surface-alt: #1e1e1d;
+  --color-ink: #fefefe;
+
+  --color-ink-soft: #c7c7c3;
+  --color-ink-faint: #8a8a85;
+  --color-border: #f2f2f0;
   --color-border-soft: #333331;
 
   --color-accent-green-bg: #103622;
-  --color-accent-blue-bg: #142440;
-  --color-accent-amber-bg: #3A2A0C;
-  --color-accent-red-bg: #3A1712;
-  --color-accent-purple-bg: #251C36;
+  --color-accent-blue-bg: #e5eefb;
+
+  --color-accent-amber-bg: #3a2a0c;
+  --color-accent-red-bg: #3a1712;
+  --color-accent-purple-bg: #251c36;
   --color-accent-gray-bg: #242422;
 
   --status-hadir-bg: var(--color-accent-green-bg);
   --status-izin-bg: var(--color-accent-blue-bg);
   --status-sakit-bg: var(--color-accent-amber-bg);
   --status-dinas-bg: var(--color-accent-purple-bg);
-  --status-wfh-bg: #0F2A2E;
+  --status-wfh-bg: #0f2a2e;
   --status-cuti-bg: var(--color-accent-gray-bg);
   --status-alpha-bg: var(--color-accent-red-bg);
 
   --shadow-flat: 4px 4px 0 0 var(--color-ink);
   --shadow-flat-sm: 2px 2px 0 0 var(--color-ink);
   --shadow-flat-lg: 6px 6px 0 0 var(--color-ink);
-  --shadow-soft: 0 1px 2px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3);
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 16px rgba(0, 0, 0, 0.3);
+
+  /* Accent blue focus ring in dark mode */
+
+  --shadow-focus: 0 0 0 3px rgba(38, 60, 146, 0.5);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,11 +1,3 @@
-/**
- * comments.js
- * ----------------------------------------------------------------------
- * Komentar & diskusi realtime pada subcollection activities/{id}/comments.
- * Mendukung reply (thread sederhana melalui field parentId) dan edit.
- * ----------------------------------------------------------------------
- */
-
 import {
   COLLECTIONS,
   SUBCOLLECTIONS,
@@ -20,13 +12,7 @@ import {
 } from "../firebase/firestore.js";
 import { pushNotification } from "./notifications.js";
 
-/**
- * Mengirim komentar baru (atau balasan jika parentId diberikan).
- * @param {string} activityId
- * @param {{uid:string,fullName:string,jobdesk:string,photoURL?:string}} author
- * @param {string} text
- * @param {string|null} parentId
- */
+
 export async function postComment(activityId, author, text, parentId = null) {
   const path = subcollectionPath(
     COLLECTIONS.ACTIVITIES,
@@ -34,6 +20,7 @@ export async function postComment(activityId, author, text, parentId = null) {
     SUBCOLLECTIONS.COMMENTS,
   );
   const id = await createDoc(path, {
+
     authorId: author.uid,
     authorName: author.fullName,
     authorJobdesk: author.jobdesk || "",
@@ -52,7 +39,6 @@ export async function postComment(activityId, author, text, parentId = null) {
     description: "memberikan komentar",
   });
 
-  // Notifikasi ke semua staff.
   try {
     const allStaff = await getCollectionOnce(DB_COLLECTIONS.USERS, {
       where: [["accountStatus", "==", "active"]],
@@ -73,7 +59,6 @@ export async function postComment(activityId, author, text, parentId = null) {
   return id;
 }
 
-/** Mengedit komentar, menandai edited=true agar UI menampilkan label "Diedit". */
 export function editComment(activityId, commentId, newText) {
   const path = subcollectionPath(
     COLLECTIONS.ACTIVITIES,
@@ -83,7 +68,6 @@ export function editComment(activityId, commentId, newText) {
   return updateDocById(path, commentId, { text: newText, edited: true });
 }
 
-/** Menghapus komentar. */
 export function deleteComment(activityId, commentId) {
   const path = subcollectionPath(
     COLLECTIONS.ACTIVITIES,
@@ -93,7 +77,6 @@ export function deleteComment(activityId, commentId) {
   return deleteDocById(path, commentId);
 }
 
-/** Realtime listener seluruh komentar pada sebuah kegiatan, urut dari yang terlama. */
 export function listenComments(activityId, callback) {
   const path = subcollectionPath(
     COLLECTIONS.ACTIVITIES,
@@ -103,7 +86,6 @@ export function listenComments(activityId, callback) {
   return listenCollection(path, { orderBy: ["createdAt", "asc"] }, callback);
 }
 
-/** Menyusun komentar datar menjadi struktur thread (parent -> replies[]). */
 export function buildCommentThread(comments) {
   const roots = comments.filter((c) => !c.parentId);
   const repliesByParent = comments.reduce((map, c) => {

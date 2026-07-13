@@ -35,8 +35,12 @@
   padding: var(--space-2) var(--space-3);
   border-right: 1px solid var(--color-border-soft);
 }
-.cal-nav-group button:last-child { border-right: none; }
-.cal-nav-group button:hover { background: var(--color-surface-alt); }
+.cal-nav-group button:last-child {
+  border-right: none;
+}
+.cal-nav-group button:hover {
+  background: var(--color-surface-alt);
+}
 
 .cal-view-switch {
   display: flex;
@@ -76,8 +80,8 @@
 }
 
 .cal-filter-chip[aria-pressed="true"] {
-  background: var(--color-ink);
-  color: var(--color-bg);
+  background: var(--color-accent-blue);
+  color: var(--color-surface);
 }
 
 /* ---- Month grid ---- */
@@ -115,28 +119,53 @@
   transition: background var(--duration-fast) var(--ease-out);
 }
 
-.cal-day-cell:hover { background: var(--color-surface-alt); }
-.cal-day-cell.other-month { background: var(--color-bg); color: var(--color-ink-faint); }
-.cal-day-cell.is-today .cal-day-number {
-  background: var(--color-ink);
-  color: var(--color-bg);
+.cal-day-cell:hover {
+  background: var(--color-surface-alt);
 }
-.cal-day-cell.is-holiday .cal-day-number { color: var(--color-accent-red); }
+.cal-day-cell.other-month {
+  background: var(--color-bg);
+  color: var(--color-ink-faint);
+}
+.cal-day-cell.is-today .cal-day-number {
+  background: var(--color-accent-blue);
+  color: var(--color-surface);
+}
+
+.cal-day-cell.is-holiday .cal-day-number {
+  color: var(--color-accent-red);
+}
 
 .cal-day-number {
-  width: 24px; height: 24px;
-  display: flex; align-items: center; justify-content: center;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
   font-size: var(--fs-sm);
   font-weight: 600;
 }
 
-.cal-day-events { display: flex; flex-direction: column; gap: 2px; overflow: hidden; }
-.cal-day-more { font-size: var(--fs-xs); color: var(--color-ink-faint); font-weight: 600; }
+.cal-day-events {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+.cal-day-more {
+  font-size: var(--fs-xs);
+  color: var(--color-ink-faint);
+  font-weight: 600;
+}
 
 @media (max-width: 720px) {
-  .cal-day-cell { min-height: 72px; }
-  .cal-toolbar-title { min-width: auto; font-size: var(--fs-base); }
+  .cal-day-cell {
+    min-height: 72px;
+  }
+  .cal-toolbar-title {
+    min-width: auto;
+    font-size: var(--fs-base);
+  }
 }
 
 /* ---- Week / Day view ---- */
@@ -189,7 +218,8 @@
 
 .cal-time-event {
   position: absolute;
-  left: 2px; right: 2px;
+  left: 2px;
+  right: 2px;
   border-radius: var(--radius-sm);
   padding: 4px 6px;
   font-size: 11px;
@@ -200,7 +230,9 @@
 }
 
 /* ---- List / agenda view ---- */
-.cal-list-group { margin-bottom: var(--space-5); }
+.cal-list-group {
+  margin-bottom: var(--space-5);
+}
 .cal-list-date-label {
   font-size: var(--fs-xs);
   font-weight: 700;
@@ -223,7 +255,9 @@
   cursor: pointer;
   transition: transform var(--duration-fast) var(--ease-out);
 }
-.cal-list-item:hover { transform: translateX(2px); }
+.cal-list-item:hover {
+  transform: translateX(2px);
+}
 
 .cal-list-item-color {
   width: 4px;
@@ -240,12 +274,36 @@
 }
 
 /* ---- Event colors (soft, theme-consistent) ---- */
-.evt-blue   { background: var(--color-accent-blue-bg);   color: var(--color-accent-blue);   border-color: var(--color-accent-blue); }
-.evt-green  { background: var(--color-accent-green-bg);  color: var(--color-accent-green);  border-color: var(--color-accent-green); }
-.evt-amber  { background: var(--color-accent-amber-bg);  color: var(--color-accent-amber);  border-color: var(--color-accent-amber); }
-.evt-red    { background: var(--color-accent-red-bg);    color: var(--color-accent-red);    border-color: var(--color-accent-red); }
-.evt-purple { background: var(--color-accent-purple-bg); color: var(--color-accent-purple); border-color: var(--color-accent-purple); }
-.evt-gray   { background: var(--color-accent-gray-bg);   color: var(--color-accent-gray);   border-color: var(--color-accent-gray); }
+.evt-blue {
+  background: var(--color-accent-blue-bg);
+  color: var(--color-accent-blue);
+  border-color: var(--color-accent-blue);
+}
+.evt-green {
+  background: var(--color-accent-green-bg);
+  color: var(--color-accent-green);
+  border-color: var(--color-accent-green);
+}
+.evt-amber {
+  background: var(--color-accent-amber-bg);
+  color: var(--color-accent-amber);
+  border-color: var(--color-accent-amber);
+}
+.evt-red {
+  background: var(--color-accent-red-bg);
+  color: var(--color-accent-red);
+  border-color: var(--color-accent-red);
+}
+.evt-purple {
+  background: var(--color-accent-purple-bg);
+  color: var(--color-accent-purple);
+  border-color: var(--color-accent-purple);
+}
+.evt-gray {
+  background: var(--color-accent-gray-bg);
+  color: var(--color-accent-gray);
+  border-color: var(--color-accent-gray);
+}
 
 /* ---- Conflict warning ---- */
 .cal-conflict-warning {

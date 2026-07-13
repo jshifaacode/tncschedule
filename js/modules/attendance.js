@@ -1,19 +1,3 @@
-/**
- * attendance.js
- * ----------------------------------------------------------------------
- * Logika bisnis Sistem Absensi Staff: absen masuk/keluar, pengajuan
- * status (izin/sakit/cuti/dst), rekap, dan statistik.
- *
- * Struktur dokumen di koleksi `attendance`:
- *   { uid, fullName, jobdesk, photoURL, date: "YYYY-MM-DD", dayName,
- *     checkInTime, checkOutTime, status, note, location,
- *     createdBy, createdAt, updatedAt }
- *
- * Satu dokumen absensi per staff per hari — ID dokumen dibentuk sebagai
- * `${uid}_${date}` agar mudah dicari & mencegah duplikasi entri harian.
- * ----------------------------------------------------------------------
- */
-
 import { db } from "../firebase/firebase-config.js";
 import {
   doc,
@@ -33,11 +17,6 @@ function attendanceDocId(uid, dateKey) {
   return `${uid}_${dateKey}`;
 }
 
-/**
- * Absen masuk. Membuat/menimpa dokumen absensi hari ini dengan jam masuk.
- * @param {{uid:string,fullName:string,jobdesk:string,photoURL?:string}} user
- * @param {{location?:string}} [options]
- */
 export async function checkIn(user, options = {}) {
   const now = new Date();
   const dateKey = toDateKey(now);
@@ -93,7 +72,6 @@ export async function checkIn(user, options = {}) {
   }
 }
 
-/** Absen keluar. Menambahkan jam keluar ke dokumen absensi hari ini. */
 export async function checkOut(user) {
   const now = new Date();
   const dateKey = toDateKey(now);
@@ -119,14 +97,6 @@ export async function checkOut(user) {
   });
 }
 
-/**
- * Mengajukan status kehadiran non-hadir (Izin/Sakit/Cuti/Dinas Luar/WFH)
- * disertai catatan.
- * @param {{uid:string,fullName:string,jobdesk:string,photoURL?:string}} user
- * @param {string} status
- * @param {string} note
- * @param {string} [dateKey] - default hari ini
- */
 export async function submitStatus(user, status, note, dateKey) {
   const key = dateKey || toDateKey(new Date());
   const ref = doc(db, COLLECTIONS.ATTENDANCE, attendanceDocId(user.uid, key));
@@ -159,7 +129,6 @@ export async function submitStatus(user, status, note, dateKey) {
   });
 }
 
-/** Realtime listener absensi hari ini (untuk widget Dashboard & halaman Absensi). */
 export function listenTodayAttendance(callback) {
   const dateKey = toDateKey(new Date());
   return listenCollection(
@@ -169,7 +138,6 @@ export function listenTodayAttendance(callback) {
   );
 }
 
-/** Mengambil rekap absensi dalam rentang tanggal (sekali, untuk halaman Rekap & Export). */
 export function getAttendanceRange(startDateKey, endDateKey) {
   return getCollectionOnce(COLLECTIONS.ATTENDANCE, {
     where: [
@@ -180,7 +148,6 @@ export function getAttendanceRange(startDateKey, endDateKey) {
   });
 }
 
-/** Menghitung statistik ringkas dari sebuah array data absensi (untuk chart & stat card). */
 export function computeAttendanceStats(records) {
   const stats = {
     hadir: 0,
