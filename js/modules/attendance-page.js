@@ -9,13 +9,7 @@
 
 import { initApp } from "../app.js";
 import { qs, qsa, escapeHtml } from "../utils/helper.js";
-import {
-  formatFullDate,
-  toDateKey,
-  formatTime,
-} from "../utils/formatter.js";
-
-
+import { formatFullDate, toDateKey, formatTime } from "../utils/formatter.js";
 
 import {
   checkIn,
@@ -187,14 +181,15 @@ async function loadRecap() {
   if (startInput) startInput.disabled = isAll;
   if (endInput) endInput.disabled = isAll;
 
-
   // Mode All Tanggal: ambil semua dokumen attendance.
   if (isAll) {
     const records = await getCollectionOnce(COLLECTIONS.ATTENDANCE, {
       orderBy: ["date", "desc"],
     });
-    renderRecapTable(records);
+    const aggregates = groupAttendanceByDate(records);
+    renderRecapTableAllDates(aggregates);
     renderRecapChart(records);
+    renderRecapExportDataAllDates(aggregates);
     return;
   }
 
@@ -206,6 +201,52 @@ async function loadRecap() {
   renderRecapChart(records);
 }
 
+function parseDateKey(dateKey) {
+  // dateKey format: YYYY-MM-DD
+  // Hindari masalah timezone dari `new Date('YYYY-MM-DD')` (sering dianggap UTC).
+  if (!dateKey) return null;
+  const m = String(dateKey).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return new Date(dateKey);
+  const y = Number(m[1]);
+  const mo = Number(m[2]) - 1;
+  const d = Number(m[3]);
+  return new Date(y, mo, d);
+}
+
+function groupAttendanceByDate(records) {
+  // Output: [{ dateKey, dateLabel, counts: {hadir: n, ...}}]
+  const map = new Map();
+
+  for (const r of records) {
+    const dateKey = r.date;
+    if (!dateKey) continue;
+    if (!map.has(dateKey)) {
+      map.set(dateKey, {
+        dateKey,
+        dateLabel: "-",
+        counts: Object.fromEntries(
+          ATTENDANCE_STATUSES.map((s) => [s.value, 0]),
+        ),
+      });
+    }
+
+    const bucket = map.get(dateKey);
+    if (bucket.counts[r.status] !== undefined) bucket.counts[r.status]++;
+  }
+
+  const aggregates = Array.from(map.values())
+    .map((x) => {
+      const dt = parseDateKey(x.dateKey);
+      return {
+        ...x,
+        dateLabel: dt ? formatFullDate(dt) : x.dateKey,
+      };
+    })
+    .sort((a, b) => a.dateKey.localeCompare(b.dateKey));
+
+  return aggregates;
+}
+
 function renderRecapTable(records) {
   const target = qs("[data-recap-table]");
   if (!target) return;
@@ -215,7 +256,7 @@ function renderRecapTable(records) {
     {
       key: "date",
       label: "Tanggal",
-      render: (r) => formatFullDate(new Date(r.date)),
+      render: (r) => formatFullDate(parseDateKey(r.date) || new Date(r.date)),
     },
 
     {
@@ -229,21 +270,54 @@ function renderRecapTable(records) {
     {
       key: "checkInTime",
       label: "Jam Masuk",
-      render: (r) => (r.checkInTime ? formatTime(new Date(r.checkInTime)) : "-"),
+      render: (r) =>
+        r.checkInTime ? formatTime(new Date(r.checkInTime)) : "-",
     },
     {
       key: "checkOutTime",
       label: "Jam Keluar",
-      render: (r) => (r.checkOutTime ? formatTime(new Date(r.checkOutTime)) : "-"),
+      render: (r) =>
+        r.checkOutTime ? formatTime(new Date(r.checkOutTime)) : "-",
     },
   ];
 
-  target.innerHTML = renderTable(
-    columns,
-    records,
-    { emptyMessage: "Tidak ada data absensi pada rentang ini." },
-  );
+  target.innerHTML = renderTable(columns, records, {
+    emptyMessage: "Tidak ada data absensi pada rentang ini.",
+  });
+}
 
+function renderRecapTableAllDates(aggregates) {
+  const target = qs("[data-recap-table]");
+  if (!target) return;
+
+  const statusColumns = ATTENDANCE_STATUSES.map((s) => ({
+    key: `count_${s.value}`,
+    label: s.label,
+    render: (r) => {
+      const n = r[`count_${s.value}`] ?? 0;
+      return `<span class="badge badge-${s.badge || "gray"}">${n}</span>`;
+    },
+  }));
+
+  const columns = [
+    {
+      key: "dateLabel",
+      label: "Tanggal",
+    },
+    ...statusColumns,
+  ];
+
+  const rows = aggregates.map((a) => {
+    const row = { dateLabel: a.dateLabel, dateKey: a.dateKey };
+    for (const s of ATTENDANCE_STATUSES) {
+      row[`count_${s.value}`] = a.counts[s.value] || 0;
+    }
+    return row;
+  });
+
+  target.innerHTML = renderTable(columns, rows, {
+    emptyMessage: "Tidak ada data absensi untuk semua tanggal.",
+  });
 }
 
 function renderRecapChart(records) {
@@ -273,6 +347,19 @@ function renderRecapChart(records) {
     "Jam Keluar": r.checkOutTime ? formatTime(new Date(r.checkOutTime)) : "-",
     Catatan: r.note || "-",
   }));
+}
+
+function renderRecapExportDataAllDates(aggregates) {
+  // Format export mengikuti tampilan agregat per tanggal.
+  window.__recapExportData = aggregates.map((a) => {
+    const row = {
+      Tanggal: a.dateLabel,
+    };
+    for (const s of ATTENDANCE_STATUSES) {
+      row[s.label] = a.counts[s.value] || 0;
+    }
+    return row;
+  });
 }
 
 function bindRecapControls() {
