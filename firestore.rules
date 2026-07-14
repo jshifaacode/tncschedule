@@ -1,18 +1,4 @@
-rules_version = '2';
 
-// ============================================================================
-// TNCschedule — Cloud Firestore Security Rules
-// ----------------------------------------------------------------------------
-// Prinsip:
-//  1. Hanya pengguna yang terautentikasi yang dapat membaca/menulis data.
-//  2. Semua staff punya hak akses yang sama (tidak ada role admin/staff).
-//  3. Validasi tipe data dasar dilakukan di sini sebagai lapisan kedua
-//     (lapisan pertama ada di validator.js sisi client).
-//  4. Dokumen `users/{uid}` hanya boleh dibuat/diubah oleh pemilik akun itu
-//     sendiri (mencegah orang lain memalsukan profil staff lain).
-//  5. `activityLogs` bersifat append-only (Audit Trail tidak boleh diedit/dihapus
-//     oleh siapa pun dari client, demi integritas riwayat perubahan).
-// ============================================================================
 
 service cloud.firestore {
   match /databases/{database}/documents {

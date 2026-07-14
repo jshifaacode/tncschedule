@@ -1,14 +1,4 @@
-rules_version = '2';
 
-// ============================================================================
-// TNCschedule — Firebase Storage Security Rules
-// ----------------------------------------------------------------------------
-// Struktur folder Storage:
-//   avatars/{uid}/{filename}                      — foto profil staff
-//   activities/{activityId}/documentation/{file}   — foto/video dokumentasi kegiatan
-//   activities/{activityId}/attachments/{file}     — lampiran (PDF/DOCX/XLSX/dst)
-//   logo/{file}                                    — logo resmi TNC (read-only publik internal)
-// ============================================================================
 
 service firebase.storage {
   match /b/{bucket}/o {
@@ -25,13 +15,13 @@ service firebase.storage {
       return request.resource.contentType.matches('image/.*');
     }
 
-    // ---- Foto profil: hanya pemilik akun yang boleh mengunggah miliknya sendiri ----
+   
     match /avatars/{uid}/{fileName} {
       allow read: if isSignedIn();
       allow write: if isSignedIn() && request.auth.uid == uid && isImage() && isValidSize(8);
     }
 
-    // ---- Dokumentasi & lampiran kegiatan: seluruh staff terautentikasi boleh mengunggah ----
+   
     match /activities/{activityId}/documentation/{fileName} {
       allow read: if isSignedIn();
       allow write: if isSignedIn() && isValidSize(25);
@@ -42,13 +32,13 @@ service firebase.storage {
       allow write: if isSignedIn() && isValidSize(25);
     }
 
-    // ---- Logo resmi TNC: hanya dapat dibaca, penulisan hanya via Firebase Console ----
+   
     match /logo/{fileName} {
       allow read: if isSignedIn();
       allow write: if false;
     }
 
-    // Tolak akses ke path lain yang tidak terdaftar secara eksplisit.
+    
     match /{allPaths=**} {
       allow read, write: if false;
     }
