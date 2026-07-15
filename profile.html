@@ -86,6 +86,50 @@
 
           <div class="profile-stat-row" data-profile-stats></div>
 
+          <div
+            class="card"
+            style="max-width: 600px"
+            data-profile-activity-realtime
+          >
+            <div class="card-header" style="margin-bottom: 12px">
+              <h3 class="card-title">Komentar & Evaluasi (Realtime)</h3>
+            </div>
+
+            <div
+              class="tabs"
+              role="tablist"
+              aria-label="Tab komentar dan evaluasi"
+              style="margin-bottom: 12px"
+            >
+              <button
+                type="button"
+                class="tab"
+                data-profile-feed-tab="comments"
+                aria-selected="true"
+              >
+                Komentar
+              </button>
+              <button
+                type="button"
+                class="tab"
+                data-profile-feed-tab="evaluations"
+                aria-selected="false"
+              >
+                Evaluasi
+              </button>
+            </div>
+
+            <div class="profile-feed" data-profile-feed-body>
+              <div data-profile-feed-loading>
+                <div class="empty-state" style="padding: 16px 0">
+                  <div class="empty-state-icon">⏳</div>
+                  <div class="empty-state-title">Memuat…</div>
+                </div>
+              </div>
+              <div class="hidden" data-profile-feed-list></div>
+            </div>
+          </div>
+
           <div class="card" style="max-width: 600px">
             <h3 class="card-title" style="margin-bottom: 16px">
               Edit Data Diri
